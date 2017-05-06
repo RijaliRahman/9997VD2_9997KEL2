@@ -36,10 +36,9 @@ public class LOGIN extends javax.swing.JFrame {
     public static Connection getConnection() {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jalino", "root", "");
-          JOptionPane.showMessageDialog(null, "koneksi berhasil");
+            JOptionPane.showMessageDialog(null, "koneksi berhasil");
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,
-                    "koneksi gagal: " + e.getMessage());
+            JOptionPane.showMessageDialog(null,"koneksi gagal: " + e.getMessage());
         }
         return con;
     }
@@ -112,31 +111,12 @@ public class LOGIN extends javax.swing.JFrame {
             graphics2D.dispose();
         }
     }
+    
+    
 
-    private void login(String username, String password) {
-        Connection con = getConnection();
-        String level = "";
-        try {
-            Statement stt = con.createStatement();
-            ResultSet rss = stt.executeQuery("SELECT username, password, level FROM admin WHERE username='" +txtname.getText() + "' AND password ='"+txtpass.getText()+"'");
-            if (rss.next()) {
-                while (rss.next()) {
-                    level = rss.getString(3);
-                }
-                if (level.equals("admin")) {
-                //new admin().setVisible(true);
-                //this.dispose();
-                } else if (level.equals("kasir")) {
-                //new admin().setVisible(true);
-                //this.dispose();
-                }
-            }
+    
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            System.out.println(""+e.getMessage());
-        }
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -152,16 +132,17 @@ public class LOGIN extends javax.swing.JFrame {
         txtname = new javax.swing.JTextField();
         txtpass = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
+        level = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        txtname.setBackground(new Color(0, 0, 0, 0));
-        txtname.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtnameMouseClicked(evt);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
+
+        txtname.setBackground(new Color(0, 0, 0, 0));
 
         txtpass.setBackground(new Color(0, 0, 0, 0));
         txtpass.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -183,20 +164,31 @@ public class LOGIN extends javax.swing.JFrame {
             clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(clPanelTransparan1Layout.createSequentialGroup()
                 .addGap(96, 96, 96)
-                .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtpass)
-                    .addComponent(txtname)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(clPanelTransparan1Layout.createSequentialGroup()
+                        .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(level)
+                        .addGap(155, 155, 155))
+                    .addGroup(clPanelTransparan1Layout.createSequentialGroup()
+                        .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtpass)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         clPanelTransparan1Layout.setVerticalGroup(
             clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(clPanelTransparan1Layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(clPanelTransparan1Layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(level))
+                    .addGroup(clPanelTransparan1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(35, 35, 35)
                 .addComponent(txtpass, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(33, 33, 33)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(92, Short.MAX_VALUE))
         );
@@ -216,14 +208,14 @@ public class LOGIN extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(114, 114, 114)
                         .addComponent(clPanelTransparan1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addComponent(clPanelTransparan1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44))
         );
@@ -244,20 +236,43 @@ public class LOGIN extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtnameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtnameMouseClicked
-        // TODO add your handling code here:
-        //txtname.setText("");
-    }//GEN-LAST:event_txtnameMouseClicked
-
     private void txtpassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtpassMouseClicked
         // TODO add your handling code here:
-        //txtpass.setText("");
+
     }//GEN-LAST:event_txtpassMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        login(txtname.getText(), txtpass.getText());
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Connection con = koneksi.getConnection();
+        String level ="";
+        try{
+            Statement stt = con.createStatement();
+            ResultSet rss = stt.executeQuery("select username, password, level from admin where username='"+txtname.getText()+"' and password = '"+txtpass.getText()+"'");
+            while(rss.next()){
+                level = rss.getString(3);
+            }
+            if(level.equals("")){
+                JOptionPane.showMessageDialog(null, "username passwor salah");
+            }else{
+                if(level.equals("admin")){
+                    new admin().setVisible(true);
+                    this.dispose();
+                }else if(level.equals("kasir")){
+                    new loading().setVisible(true);
+                    this.dispose();
+                }
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            System.out.println(""+e.getMessage());
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -307,6 +322,7 @@ public class LOGIN extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel level;
     private javax.swing.JTextField txtname;
     private javax.swing.JPasswordField txtpass;
     // End of variables declaration//GEN-END:variables

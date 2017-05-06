@@ -18,7 +18,7 @@ import javax.swing.Timer;
 public class loading extends javax.swing.JFrame {
     Timer timer;
     ActionListener action;
-  //  home hm;
+    kasir hm;
     /**
      * Creates new form main
      */
@@ -26,7 +26,7 @@ public class loading extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(this);
         jLabel1.setText(null);
-        aksipo();
+                aksipo();
         timer = new Timer(100, action);
         timer.start();
     }
@@ -39,8 +39,8 @@ public class loading extends javax.swing.JFrame {
                 progressBar.setStringPainted(true);
                 if (progressBar.getPercentComplete() == 1.0) {
                     timer.stop();
-    //                hm = new home();
-      //              hm.setVisible(true);
+                    hm = new kasir();
+                    hm.setVisible(true);
                     dispose();
                 }
             }
@@ -75,6 +75,8 @@ public class loading extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Lucida Handwriting", 1, 36)); // NOI18N
         jLabel2.setText("Selamat Datang ");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 460, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/3fb684bf52fae423cde6debcf92059581352454882_full.jpg"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 410));
 
         pack();
