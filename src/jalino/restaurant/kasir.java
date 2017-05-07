@@ -287,7 +287,6 @@ private void tampil_ruangan(){
             stt = con.createStatement();
             rss = stt.executeQuery(sql);
             while(rss.next()){
-                
                 combo.addElement(rss.getString("nama_ruangan"));
             }
         }catch(SQLException e){

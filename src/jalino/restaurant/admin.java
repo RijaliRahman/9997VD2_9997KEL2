@@ -30,6 +30,7 @@ import jalino.restaurant.koneksi;
  * @author Naga
  */
 public class admin extends javax.swing.JFrame {
+
     private Connection con = koneksi.getConnection();
     private Statement stt;
     private ResultSet rss;
@@ -37,6 +38,9 @@ public class admin extends javax.swing.JFrame {
     private SimpleDateFormat smpdtfmt = new SimpleDateFormat("dd MMMMMMMMM yyyy", Locale.getDefault());
     private String tanggal = smpdtfmt.format(tglsekarang);
     private DefaultTableModel model_admin;
+    private DefaultTableModel model_makanan;
+    private DefaultTableModel model_minuman;
+
     /**
      * Creates new form admin
      */
@@ -45,33 +49,85 @@ public class admin extends javax.swing.JFrame {
         tgl.setText(tanggal);
         setJam();
     }
-    
-    private void table_admin(){
+
+    private void table_admin() {
         model_admin = new DefaultTableModel();
         model_admin.addColumn("ID");
         model_admin.addColumn("USERNAME");
         model_admin.addColumn("PASSWORD");
-        
+
         tableadmin.setModel(model_admin);
     }
-    
-    private void tampil_admin(){
-        try{
+
+    private void table_makanan() {
+        model_makanan = new DefaultTableModel();
+        model_makanan.addColumn("ID");
+        model_makanan.addColumn("NAMA MAKANAN");
+        model_makanan.addColumn("HARGA MAKANAN");
+
+        tablemakanan.setModel(model_makanan);
+    }
+
+    private void table_minuman() {
+        model_minuman = new DefaultTableModel();
+        model_minuman.addColumn("ID");
+        model_minuman.addColumn("NAMA MINUMAN");
+        model_minuman.addColumn("HARGA MINUMAN");
+
+        tableminuman.setModel(model_minuman);
+    }
+
+    private void tampil_admin() {
+        try {
             String sql = "SELECT id,username, password from admin where level='kasir' ";
             stt = con.createStatement();
             rss = stt.executeQuery(sql);
-            while(rss.next()){
+            while (rss.next()) {
                 Object[] o = new Object[3];
                 o[0] = rss.getString("id");
                 o[1] = rss.getString("username");
                 o[2] = rss.getString("password");
                 model_admin.addRow(o);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-    
+
+    private void tampil_makanan() {
+        try {
+            String sql = "SELECT *from makanan";
+            stt = con.createStatement();
+            rss = stt.executeQuery(sql);
+            while (rss.next()) {
+                Object[] o = new Object[3];
+                o[0] = rss.getString("id_makanan");
+                o[1] = rss.getString("nama_makanan");
+                o[2] = rss.getString("harga_makanan");
+                model_makanan.addRow(o);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void tampil_minuman() {
+        try {
+            String sql = "SELECT *from minuman";
+            stt = con.createStatement();
+            rss = stt.executeQuery(sql);
+            while (rss.next()) {
+                Object[] o = new Object[3];
+                o[0] = rss.getString("id_minuman");
+                o[1] = rss.getString("nama_minuman");
+                o[2] = rss.getString("harga_minuman");
+                model_minuman.addRow(o);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public final void setJam() {
         ActionListener taskPerformer = new ActionListener() {
 
@@ -103,8 +159,19 @@ public class admin extends javax.swing.JFrame {
         };
         new Timer(1000, taskPerformer).start();
     }
-    
-    
+
+    public void tambah_kasir(String nama, String password) {
+        try {
+            String sql = "insert into admin VALUES('" + nama + "','" + password + "','kasir')";
+            stt = con.createStatement();
+            rss = stt.executeQuery(sql);
+
+        } catch (Exception e) {
+            System.out.println("ERROR");
+        }
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -130,11 +197,34 @@ public class admin extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         user_admin = new javax.swing.JTextField();
         pass_admin = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
         menu = new SetImage("menu.png");
         makanan = new SetImage("food.png");
         jLabel3 = new javax.swing.JLabel();
+        clPanelTransparan2 = new PanelTransparan.ClPanelTransparan();
+        txtmakanan = new javax.swing.JTextField();
+        txthargamakanan = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablemakanan = new javax.swing.JTable();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         minuman = new SetImage("drink.png");
         jLabel4 = new javax.swing.JLabel();
+        clPanelTransparan3 = new PanelTransparan.ClPanelTransparan();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableminuman = new javax.swing.JTable();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        txtminuman = new javax.swing.JTextField();
+        txthargaminuman = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         tgl = new javax.swing.JLabel();
         lblwktu = new javax.swing.JLabel();
@@ -183,6 +273,11 @@ public class admin extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3"
             }
         ));
+        tableadmin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableadminMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableadmin);
 
         clPanelTransparan1.setBackground(new java.awt.Color(255, 255, 0));
@@ -197,12 +292,27 @@ public class admin extends javax.swing.JFrame {
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110388_add.png"))); // NOI18N
         jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110113_error.png"))); // NOI18N
         jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+        });
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110243_refresh.png"))); // NOI18N
         jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
 
         user_admin.setBackground(new Color(0, 0, 0, 0));
         user_admin.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
@@ -215,6 +325,14 @@ public class admin extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494166860_configuration.png"))); // NOI18N
+        jLabel8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout clPanelTransparan1Layout = new javax.swing.GroupLayout(clPanelTransparan1);
         clPanelTransparan1.setLayout(clPanelTransparan1Layout);
         clPanelTransparan1Layout.setHorizontalGroup(
@@ -223,21 +341,26 @@ public class admin extends javax.swing.JFrame {
                 .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(clPanelTransparan1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel5))
+                        .addComponent(jLabel5)
+                        .addGap(116, 116, 116)
+                        .addComponent(jLabel6))
                     .addGroup(clPanelTransparan1Layout.createSequentialGroup()
                         .addGap(151, 151, 151)
                         .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel10)
                             .addComponent(jLabel9))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(clPanelTransparan1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(175, 175, 175)
-                        .addComponent(jLabel7))
-                    .addComponent(user_admin, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pass_admin, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clPanelTransparan1Layout.createSequentialGroup()
+                        .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(user_admin, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pass_admin, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(196, 196, 196))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clPanelTransparan1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(116, 116, 116)
+                        .addComponent(jLabel8)
+                        .addGap(26, 26, 26))))
         );
         clPanelTransparan1Layout.setVerticalGroup(
             clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,15 +369,18 @@ public class admin extends javax.swing.JFrame {
                 .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(user_admin))
-                .addGap(50, 50, 50)
+                .addGap(170, 170, 170)
                 .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pass_admin)
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(clPanelTransparan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)))
+            .addGroup(clPanelTransparan1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8))
         );
 
         javax.swing.GroupLayout adminLayout = new javax.swing.GroupLayout(admin);
@@ -265,7 +391,7 @@ public class admin extends javax.swing.JFrame {
                 .addGroup(adminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(adminLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE))
                     .addComponent(clPanelTransparan1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -275,7 +401,7 @@ public class admin extends javax.swing.JFrame {
                 .addComponent(clPanelTransparan1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(83, 83, 83))
+                .addGap(0, 0, 0))
         );
 
         jPanel4.add(admin, "card2");
@@ -293,18 +419,146 @@ public class admin extends javax.swing.JFrame {
             }
         });
 
+        txtmakanan.setBackground(new Color(0, 0, 0, 0));
+        txtmakanan.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+        txtmakanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtmakananActionPerformed(evt);
+            }
+        });
+
+        txthargamakanan.setBackground(new Color(0, 0, 0, 0));
+        txthargamakanan.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+        txthargamakanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txthargamakananActionPerformed(evt);
+            }
+        });
+
+        tablemakanan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tablemakanan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablemakananMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablemakanan);
+
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110388_add.png"))); // NOI18N
+        jLabel11.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel11MouseClicked(evt);
+            }
+        });
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110243_refresh.png"))); // NOI18N
+        jLabel12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel12MouseClicked(evt);
+            }
+        });
+
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110113_error.png"))); // NOI18N
+        jLabel13.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel13.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel13MouseClicked(evt);
+            }
+        });
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494166860_configuration.png"))); // NOI18N
+        jLabel14.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel14MouseClicked(evt);
+            }
+        });
+
+        jLabel15.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel15.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+        jLabel15.setText("Nama Makanan");
+
+        jLabel16.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel16.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+        jLabel16.setText("Harga Makanan");
+
+        javax.swing.GroupLayout clPanelTransparan2Layout = new javax.swing.GroupLayout(clPanelTransparan2);
+        clPanelTransparan2.setLayout(clPanelTransparan2Layout);
+        clPanelTransparan2Layout.setHorizontalGroup(
+            clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(clPanelTransparan2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clPanelTransparan2Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel12)
+                        .addGap(81, 81, 81)
+                        .addComponent(jLabel13)
+                        .addGap(110, 110, 110)
+                        .addComponent(jLabel14)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clPanelTransparan2Layout.createSequentialGroup()
+                        .addGap(130, 130, 130)
+                        .addGroup(clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtmakanan, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                            .addComponent(txthargamakanan))
+                        .addGap(124, 124, 124))))
+        );
+        clPanelTransparan2Layout.setVerticalGroup(
+            clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(clPanelTransparan2Layout.createSequentialGroup()
+                .addGap(73, 73, 73)
+                .addGroup(clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtmakanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addGap(44, 44, 44)
+                .addGroup(clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txthargamakanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addGroup(clPanelTransparan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         javax.swing.GroupLayout makananLayout = new javax.swing.GroupLayout(makanan);
         makanan.setLayout(makananLayout);
         makananLayout.setHorizontalGroup(
             makananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, makananLayout.createSequentialGroup()
-                .addGap(0, 656, Short.MAX_VALUE)
+                .addGap(0, 710, Short.MAX_VALUE)
                 .addComponent(jLabel3))
+            .addGroup(makananLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(clPanelTransparan2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         makananLayout.setVerticalGroup(
             makananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, makananLayout.createSequentialGroup()
-                .addGap(0, 497, Short.MAX_VALUE)
+                .addComponent(clPanelTransparan2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -320,18 +574,144 @@ public class admin extends javax.swing.JFrame {
             }
         });
 
+        tableminuman.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tableminuman.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableminumanMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tableminuman);
+
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110388_add.png"))); // NOI18N
+        jLabel17.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel17.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel17MouseClicked(evt);
+            }
+        });
+
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110243_refresh.png"))); // NOI18N
+        jLabel18.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel18.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel18MouseClicked(evt);
+            }
+        });
+
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494110113_error.png"))); // NOI18N
+        jLabel19.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel19.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel19MouseClicked(evt);
+            }
+        });
+
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jalino/restaurant/1494166860_configuration.png"))); // NOI18N
+        jLabel20.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel20.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel20MouseClicked(evt);
+            }
+        });
+
+        jLabel21.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel21.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+        jLabel21.setText("Nama Minuman");
+
+        jLabel22.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel22.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+        jLabel22.setText("Harga Minuman");
+
+        txtminuman.setBackground(new Color(0, 0, 0, 0));
+        txtminuman.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+
+        txthargaminuman.setBackground(new Color(0, 0, 0, 0));
+        txthargaminuman.setFont(new java.awt.Font("Viner Hand ITC", 1, 24)); // NOI18N
+        txthargaminuman.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txthargaminumanActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout clPanelTransparan3Layout = new javax.swing.GroupLayout(clPanelTransparan3);
+        clPanelTransparan3.setLayout(clPanelTransparan3Layout);
+        clPanelTransparan3Layout.setHorizontalGroup(
+            clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(clPanelTransparan3Layout.createSequentialGroup()
+                .addGroup(clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(clPanelTransparan3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3)
+                            .addGroup(clPanelTransparan3Layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addGap(85, 85, 85)
+                                .addComponent(jLabel18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel19)
+                                .addGap(84, 84, 84)
+                                .addComponent(jLabel20))))
+                    .addGroup(clPanelTransparan3Layout.createSequentialGroup()
+                        .addGap(135, 135, 135)
+                        .addGroup(clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel22))
+                        .addGap(44, 44, 44)
+                        .addGroup(clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtminuman, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+                            .addComponent(txthargaminuman))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        clPanelTransparan3Layout.setVerticalGroup(
+            clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clPanelTransparan3Layout.createSequentialGroup()
+                .addGap(76, 76, 76)
+                .addGroup(clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(txtminuman, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
+                .addGroup(clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(txthargaminuman, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGroup(clPanelTransparan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel19)
+                    .addComponent(jLabel20))
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout minumanLayout = new javax.swing.GroupLayout(minuman);
         minuman.setLayout(minumanLayout);
         minumanLayout.setHorizontalGroup(
             minumanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(minumanLayout.createSequentialGroup()
                 .addComponent(jLabel4)
-                .addGap(0, 656, Short.MAX_VALUE))
+                .addGap(0, 710, Short.MAX_VALUE))
+            .addGroup(minumanLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(clPanelTransparan3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         minumanLayout.setVerticalGroup(
             minumanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, minumanLayout.createSequentialGroup()
-                .addGap(0, 497, Short.MAX_VALUE)
+                .addComponent(clPanelTransparan3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -358,8 +738,10 @@ public class admin extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
+        tgl.setFont(new java.awt.Font("Viner Hand ITC", 1, 18)); // NOI18N
         tgl.setText("jLabel1");
 
+        lblwktu.setFont(new java.awt.Font("Viner Hand ITC", 1, 18)); // NOI18N
         lblwktu.setText("jLabel2");
 
         jLabel1.setFont(new java.awt.Font("Viner Hand ITC", 2, 48)); // NOI18N
@@ -374,7 +756,7 @@ public class admin extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tgl, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -432,11 +814,202 @@ public class admin extends javax.swing.JFrame {
         // TODO add your handling code here:
         table_admin();
         tampil_admin();
+        table_makanan();
+        tampil_makanan();
+        table_minuman();
+        tampil_minuman();
     }//GEN-LAST:event_formComponentShown
 
     private void pass_adminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pass_adminActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_pass_adminActionPerformed
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        String ha = user_admin.getText();
+        String za = pass_admin.getText();
+        int status = 0;
+        try {
+            String sql = "insert into admin(username,password,level) VALUES('" + ha + "','" + za + "','kasir')";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_admin();
+        tampil_admin();
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        int status = 0;
+        int baris = tableadmin.getSelectedRow();
+        try {
+            String sql = "UPDATE admin SET username='" + user_admin.getText() + "',password='" + pass_admin.getText() + "' WHERE ID='" + tableadmin.getValueAt(baris, 0) + "'";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_admin();
+        tampil_admin();
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void tableadminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableadminMouseClicked
+        int baris = tableadmin.getSelectedRow();
+        user_admin.setText(tableadmin.getValueAt(baris, 1).toString());
+        pass_admin.setText(tableadmin.getValueAt(baris, 2).toString());
+    }//GEN-LAST:event_tableadminMouseClicked
+
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+        // TODO add your handling code here:
+        //wss
+        int status = 0;
+        int baris = tableadmin.getSelectedRow();
+        try {
+            String sql = "delete from admin where id ='" + tableadmin.getValueAt(baris, 0) + "'";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_admin();
+        tampil_admin();
+    }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        // TODO add your handling code here:
+        user_admin.setText("");
+        pass_admin.setText("");
+    }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void txtmakananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtmakananActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtmakananActionPerformed
+
+    private void txthargamakananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txthargamakananActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txthargamakananActionPerformed
+
+    private void jLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseClicked
+        // TODO add your handling code here:
+        String ha = txtmakanan.getText();
+        String za = txthargamakanan.getText();
+        int status = 0;
+        try {
+            String sql = "insert into makanan(nama_makanan, harga_makanan) VALUES('" + ha + "','" + za + "')";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_makanan();
+        tampil_makanan();
+    }//GEN-LAST:event_jLabel11MouseClicked
+
+    private void tablemakananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablemakananMouseClicked
+        // TODO add your handling code here:
+        int barismakanan = tablemakanan.getSelectedRow();
+        txtmakanan.setText(tablemakanan.getValueAt(barismakanan, 1).toString());
+        txthargamakanan.setText(tablemakanan.getValueAt(barismakanan, 2).toString());
+    }//GEN-LAST:event_tablemakananMouseClicked
+
+    private void jLabel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseClicked
+        // TODO add your handling code here:
+        int status = 0;
+        int barismakanan = tablemakanan.getSelectedRow();
+        try {
+            String sql = "UPDATE makanan SET nama_makanan='" + txtmakanan.getText() + "',harga_makanan='" + txthargamakanan.getText() + "' WHERE id_makanan='" + tablemakanan.getValueAt(barismakanan, 0) + "'";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_makanan();
+        tampil_makanan();
+    }//GEN-LAST:event_jLabel12MouseClicked
+
+    private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
+        // TODO add your handling code here:
+        int status = 0;
+        int barismakanan = tablemakanan.getSelectedRow();
+        try {
+            String sql = "delete from makanan where id_makanan ='" + tablemakanan.getValueAt(barismakanan, 0) + "'";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_makanan();
+        tampil_makanan();
+    }//GEN-LAST:event_jLabel13MouseClicked
+
+    private void jLabel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel14MouseClicked
+        // TODO add your handling code here:
+        txtmakanan.setText("");
+        txthargamakanan.setText("");
+    }//GEN-LAST:event_jLabel14MouseClicked
+
+    private void txthargaminumanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txthargaminumanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txthargaminumanActionPerformed
+
+    private void tableminumanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableminumanMouseClicked
+        // TODO add your handling code here:
+        int barisminuman = tableminuman.getSelectedRow();
+        txtminuman.setText(tableminuman.getValueAt(barisminuman, 1).toString());
+        txthargaminuman.setText(tableminuman.getValueAt(barisminuman, 2).toString());
+    }//GEN-LAST:event_tableminumanMouseClicked
+
+    private void jLabel17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MouseClicked
+        // TODO add your handling code here:
+        String ha = txtminuman.getText();
+        String za = txthargaminuman.getText();
+        int status = 0;
+        try {
+            String sql = "insert into minuman(nama_minuman, harga_minuman) VALUES('" + ha + "','" + za + "')";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_minuman();
+        tampil_minuman();
+    }//GEN-LAST:event_jLabel17MouseClicked
+
+    private void jLabel19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MouseClicked
+        // TODO add your handling code here:
+        int status = 0;
+        int barisminuman = tableminuman.getSelectedRow();
+        try {
+            String sql = "delete from minuman where id_minuman ='" + tableminuman.getValueAt(barisminuman, 0) + "'";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_minuman();
+        tampil_minuman();
+    }//GEN-LAST:event_jLabel19MouseClicked
+
+    private void jLabel18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel18MouseClicked
+        // TODO add your handling code here:
+        int status = 0;
+        int barisminuman = tableminuman.getSelectedRow();
+        try {
+            String sql = "UPDATE minuman SET nama_minuman='" + txtminuman.getText() + "',harga_minuman='" + txthargaminuman.getText() + "' WHERE id_minuman='" + tableminuman.getValueAt(barisminuman, 0) + "'";
+            stt = con.createStatement();
+            status = stt.executeUpdate(sql);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        table_minuman();
+        tampil_minuman();
+    }//GEN-LAST:event_jLabel18MouseClicked
+
+    private void jLabel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel20MouseClicked
+        // TODO add your handling code here:
+        txtminuman.setText("");
+        txthargaminuman.setText("");
+    }//GEN-LAST:event_jLabel20MouseClicked
 
     /**
      * @param args the command line arguments
@@ -476,29 +1049,52 @@ public class admin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel admin;
     private PanelTransparan.ClPanelTransparan clPanelTransparan1;
+    private PanelTransparan.ClPanelTransparan clPanelTransparan2;
+    private PanelTransparan.ClPanelTransparan clPanelTransparan3;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblwktu;
     private javax.swing.JPanel makanan;
     private javax.swing.JPanel menu;
     private javax.swing.JPanel minuman;
     private javax.swing.JTextField pass_admin;
     private javax.swing.JTable tableadmin;
+    private javax.swing.JTable tablemakanan;
+    private javax.swing.JTable tableminuman;
     private javax.swing.JLabel tgl;
+    private javax.swing.JTextField txthargamakanan;
+    private javax.swing.JTextField txthargaminuman;
+    private javax.swing.JTextField txtmakanan;
+    private javax.swing.JTextField txtminuman;
     private javax.swing.JTextField user_admin;
     // End of variables declaration//GEN-END:variables
 public class SetImage extends JPanel {
@@ -531,5 +1127,5 @@ public class SetImage extends JPanel {
             color = new Color(0, 0, 0, 100);
         }
     }
-    
+
 }
